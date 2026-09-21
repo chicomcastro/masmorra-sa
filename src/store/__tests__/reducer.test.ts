@@ -249,3 +249,55 @@ describe('ajuste manual', () => {
     expect(run(s).events.at(-1)).toMatchObject({ type: 'override', payload: { from: 6, to: 3 } })
   })
 })
+
+describe('cicatrizes entre partidas', () => {
+  it('uma Cicatriz ganhada aparece no perfil do jogador na partida seguinte', () => {
+    let s = reducer(emptyState(), { type: 'UPSERT_PROFILE', id: null, name: 'Chico' })
+    const profileId = s.profiles[0].id
+
+    s = reducer(s, {
+      type: 'START_RUN',
+      mode: 'duo',
+      heroes: [{ ...duoHeroes[0], profileId }, duoHeroes[1]],
+      squireIds: [],
+      seed: 3,
+    })
+    const heroId = run(s).heroes[0].id
+
+    // A partida termina com a heroína marcada.
+    s = {
+      ...s,
+      currentRun: {
+        ...run(s),
+        heroes: run(s).heroes.map((h) => (h.id === heroId ? { ...h, scars: ['scar-voz-rouca'] } : h)),
+      },
+    }
+    s = play(s, { type: 'ABANDON' }, { type: 'ARCHIVE_RUN' })
+    expect(s.profiles.find((p) => p.id === profileId)!.scars).toEqual(['scar-voz-rouca'])
+
+    // E a Cicatriz está lá na descida seguinte.
+    s = reducer(s, {
+      type: 'START_RUN',
+      mode: 'duo',
+      heroes: [{ ...duoHeroes[0], profileId }, duoHeroes[1]],
+      squireIds: [],
+      seed: 4,
+    })
+    expect(run(s).heroes[0].scars).toEqual(['scar-voz-rouca'])
+  })
+
+  it('não duplica a Cicatriz que o perfil já tinha', () => {
+    let s = reducer(emptyState(), { type: 'UPSERT_PROFILE', id: null, name: 'Chico' })
+    const profileId = s.profiles[0].id
+    s.profiles[0].scars.push('scar-voz-rouca')
+    s = reducer(s, {
+      type: 'START_RUN',
+      mode: 'duo',
+      heroes: [{ ...duoHeroes[0], profileId }, duoHeroes[1]],
+      squireIds: [],
+      seed: 3,
+    })
+    s = play(s, { type: 'ABANDON' }, { type: 'ARCHIVE_RUN' })
+    expect(s.profiles.find((p) => p.id === profileId)!.scars).toEqual(['scar-voz-rouca'])
+  })
+})
