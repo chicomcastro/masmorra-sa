@@ -40,6 +40,9 @@ jogo, o jogo leva ao fim, o fim leva ao arquivo. O dashboard é o único desvio,
 só se acessa do início — estatística na mesa contamina a mesa, que é exatamente
 o que este app existe para medir.
 
+Os diagramas das camadas, do fluxo de uma ação e da máquina de estados estão em
+[`docs/arquitetura.md`](docs/arquitetura.md).
+
 ## Decisões
 
 As decisões de projeto ficam em [`docs/adr`](docs/adr), uma por arquivo, com o
