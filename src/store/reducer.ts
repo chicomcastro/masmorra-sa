@@ -380,6 +380,10 @@ function revealCard(run: Run): Run {
   })
 
   if (card.kind === 'boss') {
+    // O Escudeiro volta no descanso e antes do chefe.
+    if (card.phase === 1) {
+      next = { ...next, squires: next.squires.map((s) => ({ ...s, retired: false })) }
+    }
     next = emit(next, 'boss_phase_started', {
       bossId: card.bossId,
       phase: card.phase,

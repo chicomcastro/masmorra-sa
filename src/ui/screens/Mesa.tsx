@@ -7,6 +7,7 @@ import { useDispatch } from '../../store'
 import { actorName, eligibleActors, retreatCost, tableSize } from '../../store/reducer'
 import { CardFace } from '../components/CardFace'
 import { HeroTile, SquireTile } from '../components/HeroTile'
+import { PhaseAnnounce } from '../components/PhaseAnnounce'
 import { TwoTapButton } from '../components/primitives'
 import { Consequencias } from './Consequencias'
 import { Descanso } from './Descanso'
@@ -95,6 +96,14 @@ export function Mesa({ run }: { run: Run }) {
                 </div>
               ))}
             </div>
+            {eligible.length === 0 ? (
+              <p className="warn" style={{ margin: 0 }}>
+                Ninguém pode ocupar vaga nesta carta.
+                {run.phase === 'deciding'
+                  ? ` Só resta recuar — custa ${retreatCost(run)} carta${retreatCost(run) > 1 ? 's' : ''} do monte.`
+                  : ''}
+              </p>
+            ) : null}
           </>
         ) : null}
 
@@ -164,10 +173,9 @@ export function Mesa({ run }: { run: Run }) {
               type="button"
               className="quiet"
               disabled={run.deck.length < 1}
-              title={run.deck.length < 1 ? 'Descansar custa 1 carta, e o monte está vazio' : undefined}
               onClick={() => dispatch({ type: 'START_REST' })}
             >
-              Descansar · custa 1 carta
+              {run.deck.length < 1 ? 'Descansar · o monte está vazio' : 'Descansar · custa 1 carta'}
             </button>
             <button type="button" className="primary" onClick={() => dispatch({ type: 'REVEAL_CARD' })}>
               Revelar
@@ -215,6 +223,8 @@ export function Mesa({ run }: { run: Run }) {
       </div>
 
       {run.phase === 'entering' && card ? <EntradaRolagem run={run} /> : null}
+
+      {isBoss && card.kind === 'boss' && card.phase > 1 ? <PhaseAnnounce phase={card} /> : null}
 
       {overlay?.kind === 'ficha' ? (
         <FichaSheet run={run} heroId={overlay.heroId} onClose={() => setOverlay(null)} />

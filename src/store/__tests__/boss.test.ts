@@ -135,3 +135,18 @@ describe('derrota', () => {
     expect(run(s).defeatCause).toBe('monte')
   })
 })
+
+describe('Escudeiro', () => {
+  it('volta antes do chefe, mesmo sem descanso', () => {
+    let s = atBoss('duo')
+    s = {
+      ...s,
+      currentRun: {
+        ...run(s),
+        squires: [{ id: 'sq', squireId: 'squire-manha', suit: 'manha', name: 'Tico', pool: 3, retired: true }],
+      },
+    }
+    s = play(s, { type: 'REVEAL_CARD' })
+    expect(run(s).squires[0].retired).toBe(false)
+  })
+})
