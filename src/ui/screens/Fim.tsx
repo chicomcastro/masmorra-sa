@@ -10,7 +10,7 @@ const CAUSE: Record<string, string> = {
 }
 
 /** Três blocos: o desfecho, a linha do tempo e a matemática oculta, enfim revelada. */
-export function Fim({ run, onArchive }: { run: Run; onArchive: () => void }) {
+export function Fim({ run, onDebrief, onArchive }: { run: Run; onDebrief: () => void; onArchive: () => void }) {
   const dispatch = useDispatch()
   const newScars = run.heroes.flatMap((h) => h.scars.map((s) => ({ hero: h.name, scar: s })))
 
@@ -88,10 +88,13 @@ export function Fim({ run, onArchive }: { run: Run; onArchive: () => void }) {
           </div>
         </div>
 
-        <div className="row">
+        <div className="row" style={{ flexWrap: 'wrap' }}>
+          <button type="button" className="primary" onClick={onDebrief}>
+            Preencher o debrief
+          </button>
           <button
             type="button"
-            className="primary"
+            className="quiet"
             onClick={() => {
               dispatch({ type: 'ARCHIVE_RUN' })
               onArchive()
@@ -100,6 +103,10 @@ export function Fim({ run, onArchive }: { run: Run; onArchive: () => void }) {
             Arquivar e voltar ao início
           </button>
         </div>
+        <p className="note">
+          O debrief pode ficar em branco e ser preenchido dias depois, a partir dos Registros. Uma partida
+          sem debrief nunca bloqueia o arquivamento.
+        </p>
       </div>
     </div>
   )

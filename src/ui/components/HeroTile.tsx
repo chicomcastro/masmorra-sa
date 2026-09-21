@@ -30,9 +30,10 @@ export function HeroTile({
 
   let status: string
   if (hero.down) status = 'caído · não ocupa vaga, joga cartas'
+  else if (!card) status = `${hero.wounds.length ? `${hero.wounds.length} ferimento${hero.wounds.length > 1 ? 's' : ''}` : 'inteiro'} · tocar p/ ver a ficha`
   else if (inSlot) status = 'na vaga'
   else if (!eligible) status = 'não pode entrar nesta carta'
-  else if (!hasSuit && card) status = `sem ${suits.map((s) => SUIT_LABEL[s]).join('/')} · 2 sucessos contam como 1`
+  else if (!hasSuit) status = `sem ${suits.map((s) => SUIT_LABEL[s]).join('/')} · 2 sucessos contam como 1`
   else status = 'tocar p/ entrar'
 
   return (

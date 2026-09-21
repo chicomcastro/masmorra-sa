@@ -33,6 +33,13 @@ npm run check    # typecheck + testes + build, o mesmo que o CI roda
 | `src/store` | Estado + reducer. Cada ação produz novo estado e eventos de telemetria. |
 | `src/ui` | Telas. Nenhuma regra de jogo mora aqui. |
 
+## Telas
+
+Doze telas e cinco sobreposições, num funil sem abas nem menu: o início leva ao
+jogo, o jogo leva ao fim, o fim leva ao arquivo. O dashboard é o único desvio, e
+só se acessa do início — estatística na mesa contamina a mesa, que é exatamente
+o que este app existe para medir.
+
 ## Decisões
 
 As decisões de projeto ficam em [`docs/adr`](docs/adr), uma por arquivo, com o

@@ -28,6 +28,7 @@ import type {
   Squire,
 } from '../engine/state'
 import type { Action, HeroSetup } from './actions'
+import { mergeBundle } from './export'
 import { APP_VERSION, SCHEMA_VERSION, type AppState } from './state'
 
 // ---------------------------------------------------------------- utilidades
@@ -1177,6 +1178,9 @@ export function reducer(state: AppState, action: Action): AppState {
 
     case 'DELETE_PROFILE':
       return { ...state, profiles: state.profiles.filter((p) => p.id !== action.profileId) }
+
+    case 'IMPORT':
+      return mergeBundle(state, action.payload).state
 
     case 'DELETE_ARCHIVED':
       return { ...state, archive: state.archive.filter((r) => r.id !== action.runId) }
