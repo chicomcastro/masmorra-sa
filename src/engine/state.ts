@@ -85,6 +85,40 @@ export interface CurrentCard {
   hidden: HiddenMath | null
   /** Boss phases only: which phase attempt this is, for retry bookkeeping. */
   bossPhaseIndex?: 0 | 1 | 2
+  /** Victory only: the two Espólios drawn for each participant, and what they kept. */
+  lootOffers: LootOffer[]
+  /** Failure only: the leftover point nobody has claimed yet. */
+  damageRemainder: number
+  damageDecidedAt: string | null
+  manualNotes: string[]
+}
+
+export interface LootOffer {
+  heroId: string
+  offered: string[]
+  chosen: string | null
+  equippedTo: string | null
+  displaced: string | null
+}
+
+export interface Piles {
+  loot: string[]
+  lootDiscard: string[]
+  wound: string[]
+  woundDiscard: string[]
+  scar: string[]
+  scarDiscard: string[]
+}
+
+export interface RestState {
+  step: 'cost' | 'heal' | 'healer' | 'luck' | 'done'
+  deckBefore: number
+  healerId: string | null
+  healerSuccesses: number | null
+  distribution: { heroId: string; points: number }[]
+  healed: string[]
+  scarRolls: { heroId: string; rolledOne: boolean }[]
+  startedAt: string
 }
 
 export interface ResolvedCard extends CurrentCard {
@@ -139,6 +173,10 @@ export interface Run {
   events: GameEvent[]
   debrief: Debrief | null
   restCount: number
+  piles: Piles
+  rest: RestState | null
+  /** Boss phase II cards that care about who entered phase I. */
+  lastBossParticipants: string[]
 }
 
 export interface Profile {
