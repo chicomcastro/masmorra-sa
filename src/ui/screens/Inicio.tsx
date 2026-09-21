@@ -1,8 +1,9 @@
 import { cardById } from '../../content'
 import { useAppState, useDispatch } from '../../store'
+import { STORAGE_WARN_RUNS, storageUsedKb } from '../../store/persist'
 import { TwoTapButton } from '../components/primitives'
 
-export type Screen = 'inicio' | 'preparo' | 'registros' | 'dashboard' | 'perfis'
+export type Screen = 'inicio' | 'preparo' | 'registros' | 'dashboard' | 'perfis' | 'debrief'
 
 /** Havendo partida em andamento, retomar domina a tela. */
 export function Inicio({ go }: { go: (screen: Screen) => void }) {
@@ -49,6 +50,13 @@ export function Inicio({ go }: { go: (screen: Screen) => void }) {
             Nova descida
           </button>
         )}
+
+        {state.archive.length >= STORAGE_WARN_RUNS ? (
+          <p className="warn">
+            {state.archive.length} partidas guardadas ({storageUsedKb()} KB). Exporte pelo dashboard antes que
+            o armazenamento do navegador encha.
+          </p>
+        ) : null}
 
         <div className="row" style={{ flexWrap: 'wrap' }}>
           <button type="button" className="quiet" onClick={() => go('registros')}>
